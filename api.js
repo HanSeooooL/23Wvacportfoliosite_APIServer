@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const { selectProject } = require('./DB/DB');
 const app = express();
 const port = 3003;
 
@@ -7,7 +8,8 @@ const server = app.listen(port, () => {
 })
 
 //DB API
-app.get('/api/DB/selectProject', function (req, res) {
-    let ID = req.params('ID');
-    
+app.get('/api/DB/selectProject', async function (req, res) {
+    let data = await selectProject({})
+    console.log(data)
+    res.send(data)
 })

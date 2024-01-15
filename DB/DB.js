@@ -80,6 +80,7 @@ module.exports = {
             //Where conditions
             let whereDict = DictionarytoArrayforDBCondition(condition)
             if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
+            console.log(SQL)
             const connection = await pool.connection();
             let [res] = await connection.query(SQL, whereDict.value)
             connection.release()
