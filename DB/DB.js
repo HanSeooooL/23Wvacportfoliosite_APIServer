@@ -30,6 +30,7 @@ function DictionarytoArrayforDBCondition(Dict) {
 }
 
 module.exports = {
+    //Project
     insertProject: async function (proj) {
         try {
             const SQL = `INSERT into Project values (?, ?, ?, ?, ?, ?)`
@@ -84,10 +85,77 @@ module.exports = {
             let [res] = await connection.query(SQL, whereDict.value)
             connection.release()
             console.log("Success selectProject!!")
+            console.log(res[0])
             return res
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxxxxxxxxx Failed selectProject.... xxxxxxxxxxxxxxxxxxxx')
         }
+    },
+
+    //Excularity_Activities
+    insertExAc: async function (exac) {
+        try {
+            const SQL = `insert into Ex_Ac values (?, ?, ?, ?, ?, ?)`
+            const params = ['0', exac.title, exac.host, exac.start, exac.finish, exac.awarded]
+            const connection = await pool.connection()
+            await connection.query(SQL, params)
+            console.log ("Success insertExAc!!")
+            connection.release()
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxxxxx Failed insertExAc.... xxxxxxxxxxxxxxxx')
+        }
+    },
+    deleteExAc: async function (index) {
+        try {
+            const SQL = `delete from Ex_Ac where ID=?`
+            const param = Number(index)
+            const connection = await pool.connection()
+            await connection.query(SQL, param)
+            console.log("Success deleteExAc!!")
+            connection.release()
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxxxxx Failed deleteExAc.... xxxxxxxxxxxxxxxx')
+        }
+    },
+    updateExAc: async function (params, condition = {}) {
+        try {
+            const SQL = `update Ex_Ac `
+            //Set param
+            let setDict = DictionarytoArrayforDB(params)
+            SQL += `set ` + setDict.SQL
+            //Where conditions
+            let whereDict = DictionarytoArrayforDBCondition(condition)
+            if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
+            const connection = await pool.connection();
+            await connection.query(SQL, setDict.value.concat(whereDict.value))
+            console.log("Success updateExAc!!")
+            connection.release()
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxxxxx Failed updateExAc.... xxxxxxxxxxxxxxxx')
+        }
+    },
+    selectExAc: async function (condition={}) {
+        try {
+            let SQL = `select * from Ex_Ac `
+            //Where conditions
+            let whereDict = DictionarytoArrayforDBCondition(condition)
+            if(whereDict.value.length > 0) SQL += `swhere ` + whereDict.SQL
+            const connection = await pool.connection();
+            let [res] = await connection.query(SQL, whereDict.value)
+            connection.release()
+            console.log("Success selectExAc!!")
+            console.log(res[0])
+            return res
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxxxxx Failed selectExAc.... xxxxxxxxxxxxxxxx')
+        }
     }
+
+    //Career
+
 }
