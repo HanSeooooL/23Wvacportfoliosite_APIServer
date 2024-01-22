@@ -22,9 +22,13 @@ app.get('/api/DB/selectProject', function (req, res) {
     
 })
 
-//DB API
-app.get('/api/DB/selectProject', function (req, res) {
-    
+app.get('/api/DB/selectEx_Ac', function (req, res) {
+
+    DB.selectExAc().then(
+        result => {
+            res.send(result)
+        }
+    )
 })
 
 const server = app.listen(port, () => {
