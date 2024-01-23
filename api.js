@@ -115,6 +115,14 @@ app.get('/api/DB/projectSelect', function (req, res) {
     )
 })
 
+app.get('/api/deleteProject', function (req, res) {
+    DB.deleteProject(req.query.ID)
+})
+
+app.get('/api/updateProject', function(req, res) {
+    
+})
+
 const server = app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
