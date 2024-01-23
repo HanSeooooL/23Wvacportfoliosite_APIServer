@@ -31,13 +31,24 @@ function DictionarytoArrayforDBCondition(Dict) {
 
 module.exports = {
     //Project
-    insertProject: async function (proj) {
+    insertProject: async function (proj, files) {
         try {
             const SQL = `INSERT into Project values (?, ?, ?, ?, ?, ?)`
+            const secSQL = `insert into Project_uploaded VALUES ((select ID from Project where title=? and description=? and start=? and finish=? and link=?), ?)`
             const params = ['0', proj.title, proj.description, proj.start, proj.finish, proj.link]
+            let params2 = [proj.title, proj.description, proj.start, proj.finish, proj.link]
+            
             const connection = await pool.connection();
             await connection.query(SQL, params)
             console.log("Success insertProject!!")
+            if(files.length > 0) {
+                for(let i = 0; i < files.length; i++) {
+                    params2.push(files[i].filename)
+                    await connection.query(secSQL, params2)
+                    console.log("Success insertFile!!!!!")
+                    params2.pop()
+                }
+            }
             connection.release()
         } catch (e) {
             console.error(e)
@@ -47,8 +58,10 @@ module.exports = {
     deleteProject: async function (index) {
         try {
             const SQL = `delete from Project where ID=?`
+            const secSQL = `delete from Project_uploaded where proj_ID=?`
             const param = Number(index)
             const connection = await pool.connection();
+            await connection.query(secSQL, param)
             await connection.query(SQL, param)
             console.log("Success deleteProject!!")
             connection.release()
@@ -86,7 +99,7 @@ module.exports = {
             let [res] = await connection.query(SQL, whereDict.value)
             connection.release()
             console.log("Success selectProject!!")
-            console.log(res[0])
+            console.log(res)
             return res
         } catch (e) {
             console.error(e)
