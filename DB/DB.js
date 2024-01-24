@@ -248,10 +248,11 @@ module.exports = {
             console.log('xxxxxxxxxxxxxxxxx Failed insertTeQu.... xxxxxxxxxxxxxxxx')
         }
     },
-    deleteTeQu: async function (index) {
+    deleteTeQu: async function (condition = {}) {
         try {
             const SQL = `delete from Technical_Qualification where NAME=? and HOST=?`
-            const param = [index.name, index.host]
+            const param = [condition.NAME, condition.HOST]
+            console.log(param)
             const connection = await pool.connection();
             await connection.query(SQL, param)
             console.log("Success deleteTeQu!!")
