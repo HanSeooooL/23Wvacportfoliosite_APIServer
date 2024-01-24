@@ -126,7 +126,7 @@ app.post('/api/insertLaCe', uploadMiddleware, function (req, res) {
 
 app.get('/api/DB/projectSelect', function (req, res) {
     console.log(req.query.ID)
-    DB.selectProject({ID: req.query.ID}).then(
+    DB.selectProjectDetail({ID: req.query.ID}).then(
         result => {
             console.log(result)
             res.send(result)
@@ -168,8 +168,9 @@ app.get('/api/deleteTeQu', function(req, res) {
     DB.deleteTeQu({name: req.query.NAME, host: req.query.HOST})
 })
 
-app.get('/api/updateProject', function(req, res) {
-    
+app.post('/api/updateProject', function(req, res) {
+    console.log(req.body)
+    //DB.updateProject({}, {ID: req.body.ID})
 })
 
 const server = app.listen(port, () => {

@@ -34,7 +34,7 @@ module.exports = {
     insertProject: async function (proj, files) {
         try {
             const SQL = `INSERT into Project values (?, ?, ?, ?, ?, ?)`
-            const secSQL = `insert into Project_uploaded VALUES ((select ID from Project where title=? and description=? and start=? and finish=? and link=?), ?)`
+            const secSQL = `insert into Project_uploaded VALUES ((select ID from Project where title=? and description=? and start=? and finish=? and link=?), ?, ?)`
             const params = ['0', proj.title, proj.description, proj.start, proj.finish, proj.link]
             let params2 = [proj.title, proj.description, proj.start, proj.finish, proj.link]
             
@@ -44,8 +44,10 @@ module.exports = {
             if(files.length > 0) {
                 for(let i = 0; i < files.length; i++) {
                     params2.push(files[i].filename)
+                    params2.push(files[i].originalname)
                     await connection.query(secSQL, params2)
                     console.log("Success insertFile!!!!!")
+                    params2.pop()
                     params2.pop()
                 }
             }
@@ -154,7 +156,7 @@ module.exports = {
     },
     selectExAc: async function (condition={}) {
         try {
-            let SQL = `select * from Ex_Ac `
+            let SQL = `select * from Ex_Ac ` 
             //Where conditions
             let whereDict = DictionarytoArrayforDBCondition(condition)
             if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
@@ -199,7 +201,7 @@ module.exports = {
     },
     updateCareer: async function (params, condition = {}) {
         try {
-            let SQL = `update Career `
+            let SQL = `update Career ` 
             //Set param
             let setDict = DictionarytoArrayforDB(params)
             SQL += `set ` + setDict.SQL
@@ -424,6 +426,25 @@ module.exports = {
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxxxxxxxxx Failed selectContact.... xxxxxxxxxxxxxxxxxxxx')
+        }
+    },
+
+    selectProjectDetail: async function (condition={}) {
+        try {
+            let SQL = `select * from Project as P join Project_uploaded as Pu on P.ID = Pu.proj_ID where P.ID=?`
+            let params = [condition.ID]
+            
+            //Where conditions
+            console.log(SQL)
+            const connection = await pool.connection();
+            let [res] = await connection.query(SQL, params)
+            connection.release()
+            console.log("Success selectUploaded!!")
+            console.log(res[0])
+            return res
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxx Failed selectUploaded.... xxxxxxxxxxxxxxxxxxxxx')
         }
     }
 }
