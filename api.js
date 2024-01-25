@@ -7,6 +7,7 @@ const bp = require('body-parser')
 const multer = require('multer')
 const uuid4 = require('uuid4')
 const path = require('path')
+const fs = require('fs')
 
 const corsOption = {
     origin: ["http://localhost:3000"],
@@ -33,6 +34,7 @@ const uploadMiddleware = upload.array('myFiles');
 app.use(cors(corsOption))
 app.use(bp.urlencoded({extended: true}))
 app.use(bp.json())
+app.use('/files', express.static('./files'))
 //app.use(uploadMiddleware)
 
 //DB API
@@ -171,6 +173,16 @@ app.get('/api/deleteTeQu', function(req, res) {
 app.post('/api/updateProject', function(req, res) {
     console.log(req.body)
     //DB.updateProject({}, {ID: req.body.ID})
+})
+
+app.get('/api/File', function(req, res) {
+    console.log(process.cwd())
+    res.sendFile(process.cwd() + '/files/' + req.query.file)
+})
+
+app.get('/api/Img', function(req, res) {
+    console.log(process.cwd())
+    res.send()
 })
 
 const server = app.listen(port, () => {

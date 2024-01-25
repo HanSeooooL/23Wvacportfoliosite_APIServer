@@ -431,7 +431,7 @@ module.exports = {
 
     selectProjectDetail: async function (condition={}) {
         try {
-            let SQL = `select * from Project as P join Project_uploaded as Pu on P.ID = Pu.proj_ID where P.ID=?`
+            let SQL = `select * from Project as P left join Project_uploaded as Pu on P.ID = Pu.proj_ID where P.ID=?`
             let params = [condition.ID]
             
             //Where conditions
