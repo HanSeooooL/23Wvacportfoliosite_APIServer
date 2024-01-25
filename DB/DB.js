@@ -317,7 +317,7 @@ module.exports = {
     },
     deleteLaCe: async function (index) {
         try {
-            const SQL = `delete from Language_Certifiaction where ID=?`
+            const SQL = `delete from Language_Certification where ID=?`
             const param = Number(index)
             const connection = await pool.connection();
             await connection.query(SQL, param)

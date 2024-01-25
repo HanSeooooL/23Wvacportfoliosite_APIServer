@@ -19,8 +19,3 @@ const { insertProject, deleteProject, updateProject, selectProject, insertExAc, 
 //insertContact({category: 'Instagram', detail: 'sssseol'})
 //res = selectContact()
 
-selectProjectDetail({ID: 11}).then(
-    result => {
-        console.log(result)
-    }
-)

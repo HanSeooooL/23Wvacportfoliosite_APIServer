@@ -103,27 +103,31 @@ app.post('/api/insertProject', uploadMiddleware, function (req, res) {
     console.log(req.files.length)
     //console.log(req.body.date[0])
     DB.insertProject({title: req.body.Title, description: req.body.Description, start: req.body.date[0], finish: req.body.date[1], link: req.body.github}, req.files)
-    res.status(200).send('uploaded')
+    res.redirect('http://localhost:3000/Project')
 })
 
 app.post('/api/insertEx_Ac', function (req, res) {
     console.log(req.body)
     DB.insertExAc({title: req.body.title, host: req.body.host, start: req.body.start, finish: req.body.finish, awarded: req.body.awarded})
+    res.redirect('http://localhost:3000/ㄷExtrality-Activities')
 })
 
 app.post('/api/insertCareer', uploadMiddleware, function (req, res) {
     console.log(req.body)
     DB.insertCareer({comp_name: req.body.comp_name, department: req.body.department, responsibilities: req.body.responsibilities, start: req.body.start, finish: req.body.finish, certificate: req.files[0].filename})
+    res.redirect('http://localhost:3000/Careers')
 })
 
 app.post('/api/insertTeQu', uploadMiddleware, function (req, res) {
     console.log(req.body)
     DB.insertTeQu({name: req.body.name, host: req.body.host, acquisition_date: req.body.acquisition_date, certificate: req.files[0].filename})
+    res.redirect('http://localhost:3000/Technical-Qualification')
 })
 
 app.post('/api/insertLaCe', uploadMiddleware, function (req, res) {
     console.log(req.body)
     DB.insertLaCe({name: req.body.name, host: req.body.host, score: req.body.score, acquisition_date: req.body.acquisition_date, certificate: req.files[0].filename})
+    res.redirect('http://localhost:3000/Language-Certification')
 })
 
 app.get('/api/DB/projectSelect', function (req, res) {
@@ -157,6 +161,16 @@ app.get('/api/DB/TeQuSelect', function (req, res) {
     )
 })
 
+app.get('/api/DB/LaCeSelect', function (req, res) {
+    console.log(req.query.ID)
+    DB.selectLaCe({ID: req.query.ID}).then(
+        result => {
+            console.log(result)
+            res.send(result)
+        }
+    )
+})
+
 app.get('/api/deleteProject', function (req, res) {
     DB.deleteProject(req.query.ID)
 })
@@ -168,6 +182,12 @@ app.get('/api/deleteCareer', function (req, res) {
 app.get('/api/deleteTeQu', function(req, res) {
     console.log(req.query.NAME)
     DB.deleteTeQu({name: req.query.NAME, host: req.query.HOST})
+    res.redirect('http://localhost:3000/Technical-Qualification')
+})
+
+app.get('/api/deleteLaCe', function(req, res) {
+    console.log(req.query.ID)
+    DB.deleteLaCe(req.query.ID)
 })
 
 app.post('/api/updateProject', function(req, res) {
@@ -178,11 +198,6 @@ app.post('/api/updateProject', function(req, res) {
 app.get('/api/File', function(req, res) {
     console.log(process.cwd())
     res.sendFile(process.cwd() + '/files/' + req.query.file)
-})
-
-app.get('/api/Img', function(req, res) {
-    console.log(process.cwd())
-    res.send()
 })
 
 const server = app.listen(port, () => {
