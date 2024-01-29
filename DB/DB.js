@@ -368,6 +368,16 @@ module.exports = {
         }
     },
 
+    //Education
+    insertEducation: async function(con) {
+        try {
+            
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxxxxxx Failed insertEducation.... xxxxxxxxxxxxxxxxxxxxxx')
+        }
+    },
+
     //Contact
     insertContact: async function (con) {
         try {
@@ -448,6 +458,22 @@ module.exports = {
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxx Failed selectUploaded.... xxxxxxxxxxxxxxxxxxxxx')
+        }
+    },
+
+    selectEx_AcDetail: async function (condition={}) {
+        try {
+            let SQL = `select * from Ex_Ac as E left join (select P.ID as Pro_ID, title as Pro_title, link as Pro_link, exac_ID from Project as P join Ex_Ac_rel_Project as rel on P.ID = rel.proj_ID where rel.exac_ID = ?) as RelP on exac_ID = E.ID`
+            const connection = await pool.connection()
+            let params = [condition.ID]
+            let [res] = await connection.query(SQL, params)
+            connection.release()
+            console.log("Success selectEx_AcDetail!!")
+            console.log(res[0])
+            return res
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxx Failed selectEx_AcDetail.... xxxxxxxxxxxxxxxxxxxxx')
         }
     },
 

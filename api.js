@@ -137,9 +137,24 @@ app.post('/api/insertLaCe', uploadMiddleware, function (req, res) {
     res.redirect('http://localhost:3000/Language-Certification')
 })
 
+app.post('/api/insertEducation', uploadMiddleware, function(req, res) {
+    
+})
+
 app.get('/api/DB/projectSelect', function (req, res) {
     console.log(req.query.ID)
     DB.selectProjectDetail({ID: req.query.ID}).then(
+        result => {
+            console.log(result)
+            res.send(result)
+        }
+    )
+})
+
+app.get('/api/DB/Ex_AcSelect', function (req, res) {
+    console.log('in')
+    console.log(req.query.ID)
+    DB.selectEx_AcDetail({ID: req.query.ID}).then(
         result => {
             console.log(result)
             res.send(result)
