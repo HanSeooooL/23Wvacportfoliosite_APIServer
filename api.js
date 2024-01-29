@@ -84,6 +84,14 @@ app.get('/api/DB/selectLaCe', function (req, res) {
     )
 })
 
+app.get('/api/DB/selectEducation', function (req, res) {
+    DB.selectEducation().then(
+        result => {
+            res.send(result)
+        }
+    )
+})
+
 app.get('/api/DB/selectContact', function (req, res) {
 
     DB.selectContact().then(
@@ -138,7 +146,9 @@ app.post('/api/insertLaCe', uploadMiddleware, function (req, res) {
 })
 
 app.post('/api/insertEducation', uploadMiddleware, function(req, res) {
-    
+    console.log(req.body)
+    DB.insertEducation({degree: req.body.degree, major: req.body.major, state: req.body.state, name: req.body.name, admis_date: req.body.admis_date, grad_date: req.body.grad_date, certificate: req.files[0].filename})
+    res.redirect('http://localhost:3000/Education')
 })
 
 app.get('/api/DB/projectSelect', function (req, res) {

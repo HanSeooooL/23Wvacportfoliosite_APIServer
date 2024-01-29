@@ -371,10 +371,33 @@ module.exports = {
     //Education
     insertEducation: async function(con) {
         try {
-            
+            const SQL = `insert into Education values (?, ?, ?, ?, ?, ?, ?, ?)`
+            let params = ['0', con.degree, con.major, con.state, con.name, con.admis_date, con.grad_date, con.certificate]
+            const connection = await pool.connection()
+            await connection.query(SQL, params)
+            console.log("Success insertEducation!!")
+            connection.release()
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxxxxxx Failed insertEducation.... xxxxxxxxxxxxxxxxxxxxxx')
+        }
+    },
+
+    selectEducation: async function(condition={}) {
+        try {
+            const SQL = `select * from Education `
+            let whereDict = DictionarytoArrayforDBCondition(condition)
+            if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
+            console.log(SQL)
+            const connection = await pool.connection()
+            let [res] = await connection.query(SQL, whereDict.value)
+            connection.release()
+            console.log("Success selectEducation!!")
+            console.log(res[0])
+            return res
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxxxxx Failed selectEducation.... xxxxxxxxxxxxxxxx')
         }
     },
 
