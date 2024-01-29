@@ -385,10 +385,11 @@ module.exports = {
 
     selectEducation: async function(condition={}) {
         try {
-            const SQL = `select * from Education `
+            let SQL = `select * from Education `
             let whereDict = DictionarytoArrayforDBCondition(condition)
             if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
             console.log(SQL)
+            console.log(whereDict.value)
             const connection = await pool.connection()
             let [res] = await connection.query(SQL, whereDict.value)
             connection.release()

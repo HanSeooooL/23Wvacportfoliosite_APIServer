@@ -203,6 +203,16 @@ app.get('/api/DB/LaCeSelect', function (req, res) {
     )
 })
 
+app.get('/api/DB/EducationSelect', function (req, res) {
+    console.log(req.query.ID)
+    DB.selectEducation({ID: req.query.ID}).then(
+        result => {
+            console.log(result)
+            res.send(result)
+        }
+    )
+})
+
 app.get('/api/DB/selectRelProject', function (req, res) {
     console.log(req.query.ID)
 })
