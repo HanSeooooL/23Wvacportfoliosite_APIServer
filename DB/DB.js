@@ -115,9 +115,11 @@ module.exports = {
             const SQL = `insert into Ex_Ac values (?, ?, ?, ?, ?, ?)`
             const params = ['0', exac.title, exac.host, exac.start, exac.finish, exac.awarded]
             const connection = await pool.connection()
-            await connection.query(SQL, params)
+            let [res] = await connection.query(SQL, params)
             console.log ("Success insertExAc!!")
             connection.release()
+            console.log(res.insertId)
+            return res.insertId
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxxxxx Failed insertExAc.... xxxxxxxxxxxxxxxx')
@@ -160,6 +162,7 @@ module.exports = {
             //Where conditions
             let whereDict = DictionarytoArrayforDBCondition(condition)
             if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
+            console.log(SQL)
             const connection = await pool.connection();
             let [res] = await connection.query(SQL, whereDict.value)
             connection.release()
@@ -445,6 +448,24 @@ module.exports = {
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxx Failed selectUploaded.... xxxxxxxxxxxxxxxxxxxxx')
+        }
+    },
+
+    insertRelProject: async function (exc) {
+        try {
+            let SQL = `insert into Ex_Ac_rel_Project values(?, ?)`
+            let params = [exc.exac_ID]
+            const connection = await pool.connection();
+            for (let i = 0; i < exc.proj_ID.length; i++) {
+                params.push(exc.proj_ID[i])
+                await connection.query(SQL, params)
+                params.pop()
+            }
+            connection.release()
+            console.log("Success insertRelProject!!!!")
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxx Failed insertRelProject.... xxxxxxxxxxxxxxxxxxx')
         }
     }
 }

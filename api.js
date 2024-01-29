@@ -108,8 +108,15 @@ app.post('/api/insertProject', uploadMiddleware, function (req, res) {
 
 app.post('/api/insertEx_Ac', function (req, res) {
     console.log(req.body)
-    DB.insertExAc({title: req.body.title, host: req.body.host, start: req.body.start, finish: req.body.finish, awarded: req.body.awarded})
-    res.redirect('http://localhost:3000/ㄷExtrality-Activities')
+    let relprojectIDarray = JSON.parse(req.body.relprojectID)
+    DB.insertExAc({title: req.body.title, host: req.body.host, awarded: req.body.awarded, start: req.body.start, finish: req.body.finish, link: req.body.link})
+    .then(result => {
+        console.log(`result: ${result}`)
+        if (relprojectIDarray.length > 0) {
+            DB.insertRelProject({exac_ID: result, proj_ID: relprojectIDarray})
+        }
+    })
+    res.redirect('http://localhost:3000/Extrality-Activites')
 })
 
 app.post('/api/insertCareer', uploadMiddleware, function (req, res) {
@@ -169,6 +176,10 @@ app.get('/api/DB/LaCeSelect', function (req, res) {
             res.send(result)
         }
     )
+})
+
+app.get('/api/DB/selectRelProject', function (req, res) {
+    console.log(req.query.ID)
 })
 
 app.get('/api/deleteProject', function (req, res) {
