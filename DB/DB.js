@@ -269,7 +269,7 @@ module.exports = {
     },
     updateTeQu: async function (params, condition = {}) {
         try {
-            let SQL = `update Technical_Qualfication `
+            let SQL = `update Technical_Qualification `
             //Set param
             let setDict = DictionarytoArrayforDB(params)
             SQL += `set ` + setDict.SQL
@@ -380,6 +380,20 @@ module.exports = {
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxxxxxx Failed insertEducation.... xxxxxxxxxxxxxxxxxxxxxx')
+        }
+    },
+
+    deleteEducation: async function(index) {
+        try {
+            const SQL = `delete from Education where ID=?`
+            const param = Number(index)
+            const connection = await pool.connection()
+            await connection.query(SQL, param)
+            console.log('Success deleteEducation!!!!')
+            connection.release() 
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxxxx Failed deleteEducation.... xxxxxxxxxxxxxx')
         }
     },
 
@@ -516,6 +530,19 @@ module.exports = {
         } catch (e) {
             console.error(e)
             console.log('xxxxxxxxxxxxxx Failed insertRelProject.... xxxxxxxxxxxxxxxxxxx')
+        }
+    },
+
+    deleteRelProject: async function (condition={}) {
+        try {
+            let SQL = `delete from Ex_Ac_rel_Project where `
+            let whereDict = DictionarytoArrayforDBCondition(condition)
+            if (whereDict.value.length > 0) SQL += whereDict.SQL
+            const connection = await pool.connection();
+            await connection.query(SQL, whereDict.value)
+            connection.release()
+        } catch (e) {
+            console.error(e)
         }
     }
 }

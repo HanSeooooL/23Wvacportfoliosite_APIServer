@@ -185,7 +185,7 @@ app.get('/api/DB/careerSelect', function (req, res) {
 app.get('/api/DB/TeQuSelect', function (req, res) {
     console.log(req.query.NAME)
     console.log(req.query.HOST)
-    DB.selectTeQu({NAME: req.query.NAME, HOSt: req.query.HOST}).then(
+    DB.selectTeQu({NAME: req.query.NAME, HOST: req.query.HOST}).then(
         result => {
             console.log(result)
             res.send(result)
@@ -221,24 +221,42 @@ app.get('/api/deleteProject', function (req, res) {
     DB.deleteProject(req.query.ID)
 })
 
+app.get('/api/deleteEx_Ac', function (req, res) {
+    DB.deleteExAc(req.query.ID)
+    DB.deleteRelProject({exac_ID: req.query.ID})
+})
+
 app.get('/api/deleteCareer', function (req, res) {
     DB.deleteCareer(req.query.ID)
 })
 
 app.get('/api/deleteTeQu', function(req, res) {
-    console.log(req.query.NAME)
-    DB.deleteTeQu({name: req.query.NAME, host: req.query.HOST})
+    console.log(req.query)
+    DB.deleteTeQu({NAME: req.query.NAME, HOST: req.query.HOST})
     res.redirect('http://localhost:3000/Technical-Qualification')
 })
 
 app.get('/api/deleteLaCe', function(req, res) {
     console.log(req.query.ID)
     DB.deleteLaCe(req.query.ID)
+    res.redirect('http://localhost:3000/Language-Certification')
+})
+
+app.get('/api/deleteEducation', function(req, res) {
+    console.log(req.query)
+    DB.deleteEducation(req.query.ID)
+    res.redirect('http://localhost:3000/Education')
 })
 
 app.post('/api/updateProject', function(req, res) {
     console.log(req.body)
-    //DB.updateProject({}, {ID: req.body.ID})
+    DB.updateProject({title: req.body.Title, description: req.body.Description, start: req.body.date[0], finish: req.body.date[1], link: req.body.github}, {ID: req.body.ID})
+})
+
+app.post('/api/updateTeQu', function(req, res) {
+    console.log(req.body)
+    DB.updateTeQu({NAME: req.body.name, HOST: req.body.host, acquisition_date: req.body.acquisition_date}, {NAME: req.body.NAME, HOST: req.body.HOST})
+    res.redirect('http://localhost:3000/Technical-Qualification')
 })
 
 app.get('/api/File', function(req, res) {
