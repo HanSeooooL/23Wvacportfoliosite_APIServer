@@ -104,6 +104,7 @@ app.get('/api/DB/selectContact', function (req, res) {
 app.post('/api/insertContact', function (req, res) {
     console.log(req.body)
     DB.insertContact(req.body)
+    res.redirect('http://localhost:3000/Contact')
 })
 
 app.post('/api/insertProject', uploadMiddleware, function (req, res) {
@@ -219,6 +220,7 @@ app.get('/api/DB/selectRelProject', function (req, res) {
 
 app.get('/api/deleteProject', function (req, res) {
     DB.deleteProject(req.query.ID)
+    res.redirect('http://localhost:3000/Project')
 })
 
 app.get('/api/deleteEx_Ac', function (req, res) {
@@ -228,6 +230,7 @@ app.get('/api/deleteEx_Ac', function (req, res) {
 
 app.get('/api/deleteCareer', function (req, res) {
     DB.deleteCareer(req.query.ID)
+    res.redirect('http://localhost:3000/Careers')
 })
 
 app.get('/api/deleteTeQu', function(req, res) {
@@ -259,9 +262,25 @@ app.post('/api/updateTeQu', function(req, res) {
     res.redirect('http://localhost:3000/Technical-Qualification')
 })
 
+app.post('/api/updateLaCe', function(req, res) {
+    console.log(req.body)
+    DB.updateLaCe({name: req.body.name, host: req.body.host, score: req.body.score, acquisition_date: req.body.acquisition_date}, {ID: req.body.ID})
+    res.redirect('http://localhost:3000/Language-Certification')
+})
+
+app.post('/api/updateEducation', function(req, res) {
+    console.log(req.body)
+    DB.updateEducation({degree: req.body.degree, major: req.body.major, state: req.body.state, name: req.body.name, admission_date: req.body.admis_date, graduate_date: req.body.grad_date}, {ID: req.body.ID})
+    res.redirect('http://localhost:3000/Education')
+})
+
 app.get('/api/File', function(req, res) {
     console.log(process.cwd())
     res.sendFile(process.cwd() + '/files/' + req.query.file)
+})
+
+app.get('/resume/test', function(req, res) {
+    res.sendFile(path.join(__dirname, '/resume/resumefirst.html'))
 })
 
 const server = app.listen(port, () => {

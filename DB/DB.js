@@ -397,6 +397,27 @@ module.exports = {
         }
     },
 
+    updateEducation: async function(params, condition={}) {
+        try {
+            let SQL = `update Education `
+            //set params
+            let setDict = DictionarytoArrayforDB(params)
+            console.log(setDict.SQL)
+            SQL += `set ` + setDict.SQL
+            //Where conditions
+            let whereDict = DictionarytoArrayforDBCondition(condition)
+            if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
+            const connection = await pool.connection();
+            await connection.query(SQL, setDict.value.concat(whereDict.value))
+            console.log("Success updateEducation!!")
+            connection.release()
+
+        } catch (e) {
+            console.error(e)
+            console.log('xxxxxxxxxxxxx Failed updateEducation.... xxxxxxxxxxxxxxxxx')
+        }
+    },
+
     selectEducation: async function(condition={}) {
         try {
             let SQL = `select * from Education `
