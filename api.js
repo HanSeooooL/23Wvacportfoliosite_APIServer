@@ -10,7 +10,7 @@ const path = require('path')
 const fs = require('fs')
 
 const corsOption = {
-    origin: ["http://localhost:3000"],
+    origin: '*',
     method: ["GET", "POST", "PUT", "DELETE"],
 }
 
@@ -104,7 +104,7 @@ app.get('/api/DB/selectContact', function (req, res) {
 app.post('/api/insertContact', function (req, res) {
     console.log(req.body)
     DB.insertContact(req.body)
-    res.redirect('http://localhost:3000/Contact')
+    res.redirect('http://3.39.99.94:3000/Contacts')
 })
 
 app.post('/api/insertProject', uploadMiddleware, function (req, res) {
@@ -112,7 +112,7 @@ app.post('/api/insertProject', uploadMiddleware, function (req, res) {
     console.log(req.files.length)
     //console.log(req.body.date[0])
     DB.insertProject({title: req.body.Title, description: req.body.Description, start: req.body.date[0], finish: req.body.date[1], link: req.body.github}, req.files)
-    res.redirect('http://localhost:3000/Project')
+    res.redirect('http://3.39.99.94:3000/Project')
 })
 
 app.post('/api/insertEx_Ac', function (req, res) {
@@ -127,32 +127,31 @@ app.post('/api/insertEx_Ac', function (req, res) {
             DB.insertRelProject({exac_ID: result, proj_ID: relprojectIDarray})
         }
     })
-    res.redirect('http://localhost:3000/Extrality-Activites')
-   res.send('pp')
+    res.redirect('http://3.39.99.94:3000/Extrality-Activites')
 })
 
 app.post('/api/insertCareer', uploadMiddleware, function (req, res) {
     console.log(req.body)
     DB.insertCareer({comp_name: req.body.comp_name, department: req.body.department, responsibilities: req.body.responsibilities, start: req.body.start, finish: req.body.finish, certificate: req.files[0].filename})
-    res.redirect('http://localhost:3000/Careers')
+    res.redirect('http://3.39.99.94:3000/Careers')
 })
 
 app.post('/api/insertTeQu', uploadMiddleware, function (req, res) {
     console.log(req.body)
     DB.insertTeQu({name: req.body.name, host: req.body.host, acquisition_date: req.body.acquisition_date, certificate: req.files[0].filename})
-    res.redirect('http://localhost:3000/Technical-Qualification')
+    res.redirect('http://3.39.99.94:3000/Technical-Qualification')
 })
 
 app.post('/api/insertLaCe', uploadMiddleware, function (req, res) {
     console.log(req.body)
     DB.insertLaCe({name: req.body.name, host: req.body.host, score: req.body.score, acquisition_date: req.body.acquisition_date, certificate: req.files[0].filename})
-    res.redirect('http://localhost:3000/Language-Certification')
+    res.redirect('http://3.39.99.94:3000/Language-Certification')
 })
 
 app.post('/api/insertEducation', uploadMiddleware, function(req, res) {
     console.log(req.body)
     DB.insertEducation({degree: req.body.degree, major: req.body.major, state: req.body.state, name: req.body.name, admis_date: req.body.admis_date, grad_date: req.body.grad_date, certificate: req.files[0].filename})
-    res.redirect('http://localhost:3000/Education')
+    res.redirect('http://3.39.99.94:3000/Education')
 })
 
 app.get('/api/DB/projectSelect', function (req, res) {
@@ -232,64 +231,68 @@ app.get('/api/deleteEx_Ac', function (req, res) {
 
 app.get('/api/deleteCareer', function (req, res) {
     DB.deleteCareer(req.query.ID)
-    res.redirect('http://localhost:3000/Careers')
+    res.redirect('http://3.39.99.94:3000/Careers')
 })
 
 app.get('/api/deleteTeQu', function(req, res) {
     console.log(req.query)
     DB.deleteTeQu({NAME: req.query.NAME, HOST: req.query.HOST})
-    res.redirect('http://localhost:3000/Technical-Qualification')
+    res.redirect('http://3.39.99.94:3000/Technical-Qualification')
 })
 
 app.get('/api/deleteLaCe', function(req, res) {
     console.log(req.query.ID)
     DB.deleteLaCe(req.query.ID)
-    res.redirect('http://localhost:3000/Language-Certification')
+    res.redirect('http://3.39.99.94:3000/Language-Certification')
 })
 
 app.get('/api/deleteEducation', function(req, res) {
     console.log(req.query)
     DB.deleteEducation(req.query.ID)
-    res.redirect('http://localhost:3000/Education')
+    res.redirect('http://3.39.99.94:3000/Education')
 })
 
 app.post('/api/deleteContact', function(req, res) {
     console.log(req.body)
     DB.deleteContact(req.body.contact)
+    res.redirect('http://3.39.99.94:3000/Contacts')
 })
 
 app.post('/api/updateProject', function(req, res) {
     console.log(req.body)
     DB.updateProject({title: req.body.Title, description: req.body.Description, start: req.body.date[0], finish: req.body.date[1], link: req.body.github}, {ID: req.body.ID})
+    res.redirect('http://3.39.99.94:3000/Project')
 })
 
 app.post('/api/updateEx_Ac', function(req, res) {
     console.log(req.body)
     DB.updateExAc({title: req.body.title, host: req.body.host, start: req.body.start, finish:req.body.finish, awarded: req.body.awarded})
-    DB.insertRelProject({})
+    //DB.insertRelProject({})
+    res.redirect('http://3.39.99.94:3000/Ex_Ac')
 })
 
 app.post('/api/updateCareer', function(req, res) {
     console.log(req.body)
     DB.updateCareer({comp_name: req.body.comp_name, department: req.body.department, responsibilities: req.body.responsibilities, start: req.body.start, finish: req.body.finish}, {ID: req.body.ID})
+    res.redirect('http://3.39.99.94:3000/Careers')
 })
 
 app.post('/api/updateTeQu', function(req, res) {
     console.log(req.body)
     DB.updateTeQu({NAME: req.body.name, HOST: req.body.host, acquisition_date: req.body.acquisition_date}, {NAME: req.body.ex_name, HOST: req.body.ex_host})
-    res.redirect('http://localhost:3000/Technical-Qualification')
+    res.redirect('http://3.39.99.94:3000/Technical-Qualification')
 })
 
 app.post('/api/updateLaCe', function(req, res) {
     console.log(req.body)
     DB.updateLaCe({name: req.body.name, host: req.body.host, score: req.body.score, acquisition_date: req.body.acquisition_date}, {ID: req.body.ID})
-    res.redirect('http://localhost:3000/Language-Certification')
+    res.redirect('http://3.39.99.94:3000/Language-Certification')
 })
 
 app.post('/api/updateEducation', function(req, res) {
     console.log(req.body)
     DB.updateEducation({degree: req.body.degree, major: req.body.major, state: req.body.state, name: req.body.name, admission_date: req.body.admis_date, graduate_date: req.body.grad_date}, {ID: req.body.ID})
-    res.redirect('http://localhost:3000/Education')
+    res.redirect('http://3.39.99.94:3000/Education')
 })
 
 app.get('/api/File', function(req, res) {

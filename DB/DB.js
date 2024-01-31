@@ -145,7 +145,7 @@ module.exports = {
     updateExAc: async function (params, condition = {}) {
         try {
             const SQL = `update Ex_Ac `
-            const secSQL = `delete from Ex_Ac_rel_Project where exac_ID=?`
+            //const secSQL = `delete from Ex_Ac_rel_Project where exac_ID=?`
             //Set param
             let setDict = DictionarytoArrayforDB(params)
             SQL += `set ` + setDict.SQL
@@ -154,7 +154,7 @@ module.exports = {
             if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
             const connection = await pool.connection();
             await connection.query(SQL, setDict.value.concat(whereDict.value))
-            await connection.query(secSQL, condition.ID)
+            //await connection.query(secSQL, condition.ID)
             console.log("Success updateExAc!!")
             connection.release()
         } catch (e) {
