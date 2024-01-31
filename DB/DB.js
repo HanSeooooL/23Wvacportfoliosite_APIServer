@@ -61,9 +61,11 @@ module.exports = {
         try {
             const SQL = `delete from Project where ID=?`
             const secSQL = `delete from Project_uploaded where proj_ID=?`
+            const thirdSQL = `delete from Ex_Ac_rel_Project where proj_ID=?`
             const param = Number(index)
             const connection = await pool.connection();
             await connection.query(secSQL, param)
+            await connection.query(thirdSQL, param)
             await connection.query(SQL, param)
             console.log("Success deleteProject!!")
             connection.release()
@@ -128,8 +130,10 @@ module.exports = {
     deleteExAc: async function (index) {
         try {
             const SQL = `delete from Ex_Ac where ID=?`
+            const secSQL = `delete from Ex_Ac_rel_Project where exac_ID=?`
             const param = Number(index)
             const connection = await pool.connection()
+            await connection.query(secSQL, param)
             await connection.query(SQL, param)
             console.log("Success deleteExAc!!")
             connection.release()
@@ -141,6 +145,7 @@ module.exports = {
     updateExAc: async function (params, condition = {}) {
         try {
             const SQL = `update Ex_Ac `
+            const secSQL = `delete from Ex_Ac_rel_Project where exac_ID=?`
             //Set param
             let setDict = DictionarytoArrayforDB(params)
             SQL += `set ` + setDict.SQL
@@ -149,6 +154,7 @@ module.exports = {
             if(whereDict.value.length > 0) SQL += `where ` + whereDict.SQL
             const connection = await pool.connection();
             await connection.query(SQL, setDict.value.concat(whereDict.value))
+            await connection.query(secSQL, condition.ID)
             console.log("Success updateExAc!!")
             connection.release()
         } catch (e) {
@@ -451,12 +457,14 @@ module.exports = {
             console.log('xxxxxxxxxxxxxxxxx Failed insertContact.... xxxxxxxxxxxxxxxx')
         }
     },
-    deleteContact: async function (index) {
+    deleteContact: async function (index = []) {
         try {
             const SQL = `delete from Contact where ID=?`
-            const param = Number(index)
+            const param = index
             const connection = await pool.connection();
-            await connection.query(SQL, param)
+            for(let i = 0; i < param.length; i++) {
+                await connection.query(SQL, Number(param[i]))
+            }
             console.log("Success deleteContact!!")
             connection.release()
         } catch (e) {
@@ -522,9 +530,9 @@ module.exports = {
 
     selectEx_AcDetail: async function (condition={}) {
         try {
-            let SQL = `select * from Ex_Ac as E left join (select P.ID as Pro_ID, title as Pro_title, link as Pro_link, exac_ID from Project as P join Ex_Ac_rel_Project as rel on P.ID = rel.proj_ID where rel.exac_ID = ?) as RelP on exac_ID = E.ID`
+            let SQL = `select * from Ex_Ac as E left join (select P.ID as Pro_ID, title as Pro_title, link as Pro_link, exac_ID from Project as P join Ex_Ac_rel_Project as rel on P.ID = rel.proj_ID where rel.exac_ID = ?) as RelP on exac_ID = E.ID where E.ID = ?`
             const connection = await pool.connection()
-            let params = [condition.ID]
+            let params = [condition.ID, condition.ID]
             let [res] = await connection.query(SQL, params)
             connection.release()
             console.log("Success selectEx_AcDetail!!")

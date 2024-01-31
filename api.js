@@ -117,7 +117,9 @@ app.post('/api/insertProject', uploadMiddleware, function (req, res) {
 
 app.post('/api/insertEx_Ac', function (req, res) {
     console.log(req.body)
-    let relprojectIDarray = JSON.parse(req.body.relprojectID)
+    
+    let relprojectIDarray = req.body.relprojectID.split(',').map(Number)
+    console.log(relprojectIDarray)
     DB.insertExAc({title: req.body.title, host: req.body.host, awarded: req.body.awarded, start: req.body.start, finish: req.body.finish, link: req.body.link})
     .then(result => {
         console.log(`result: ${result}`)
@@ -126,6 +128,7 @@ app.post('/api/insertEx_Ac', function (req, res) {
         }
     })
     res.redirect('http://localhost:3000/Extrality-Activites')
+   res.send('pp')
 })
 
 app.post('/api/insertCareer', uploadMiddleware, function (req, res) {
@@ -163,7 +166,6 @@ app.get('/api/DB/projectSelect', function (req, res) {
 })
 
 app.get('/api/DB/Ex_AcSelect', function (req, res) {
-    console.log('in')
     console.log(req.query.ID)
     DB.selectEx_AcDetail({ID: req.query.ID}).then(
         result => {
@@ -251,14 +253,30 @@ app.get('/api/deleteEducation', function(req, res) {
     res.redirect('http://localhost:3000/Education')
 })
 
+app.post('/api/deleteContact', function(req, res) {
+    console.log(req.body)
+    DB.deleteContact(req.body.contact)
+})
+
 app.post('/api/updateProject', function(req, res) {
     console.log(req.body)
     DB.updateProject({title: req.body.Title, description: req.body.Description, start: req.body.date[0], finish: req.body.date[1], link: req.body.github}, {ID: req.body.ID})
 })
 
+app.post('/api/updateEx_Ac', function(req, res) {
+    console.log(req.body)
+    DB.updateExAc({title: req.body.title, host: req.body.host, start: req.body.start, finish:req.body.finish, awarded: req.body.awarded})
+    DB.insertRelProject({})
+})
+
+app.post('/api/updateCareer', function(req, res) {
+    console.log(req.body)
+    DB.updateCareer({comp_name: req.body.comp_name, department: req.body.department, responsibilities: req.body.responsibilities, start: req.body.start, finish: req.body.finish}, {ID: req.body.ID})
+})
+
 app.post('/api/updateTeQu', function(req, res) {
     console.log(req.body)
-    DB.updateTeQu({NAME: req.body.name, HOST: req.body.host, acquisition_date: req.body.acquisition_date}, {NAME: req.body.NAME, HOST: req.body.HOST})
+    DB.updateTeQu({NAME: req.body.name, HOST: req.body.host, acquisition_date: req.body.acquisition_date}, {NAME: req.body.ex_name, HOST: req.body.ex_host})
     res.redirect('http://localhost:3000/Technical-Qualification')
 })
 
